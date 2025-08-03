@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AIS | Icyitegetse Aimable | Futuristic UX/UI Designer & Full Stack Developer Portfolio">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="/manifest.json">
+  <title>AIS | Icyitegetse Aimable | Portfolio 2050</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="icon" href="images/avatar.png">
+  <style>
+    .glass {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .neon {
+      text-shadow: 0 0 8px #38bdf8, 0 0 16px #818cf8;
+    }
+    .floating-btn {
+      box-shadow: 0 4px 32px 0 rgba(59,130,246,0.25);
+      transition: transform 0.2s;
+    }
+    .floating-btn:hover {
+      transform: scale(1.08) translateY(-4px);
+    }
+    .project-card {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 8px 32px 0 rgba(59,130,246,0.18);
+    }
+    .theme-dark {
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+    .theme-light {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .theme-cyber {
+      background: #0f0c29;
+      color: #00fff7;
+    }
+    .theme-rose {
+      background: #1f0a1f;
+      color: #f472b6;
+    }
+    .ais-watermark {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.07;
+      background: repeating-linear-gradient(135deg, transparent, transparent 80px, #38bdf8 90px, transparent 100px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10vw; font-weight: 900; letter-spacing: 0.2em;
+      user-select: none;
+      animation: watermark-move 30s linear infinite;
+    }
+    @keyframes watermark-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 100vw 100vh; }
+    }
+    .ais-analytics {
+      position: fixed; bottom: 120px; right: 24px; z-index: 50;
+      min-width: 180px;
+      background: rgba(30,41,59,0.95);
+      color: #38bdf8;
+      border-radius: 1rem;
+      box-shadow: 0 4px 32px 0 rgba(59,130,246,0.18);
+      padding: 1rem 1.25rem;
+      font-size: 0.95rem;
+      font-family: 'Poppins', sans-serif;
+      border: 1.5px solid #38bdf8;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      align-items: flex-start;
+      pointer-events: auto;
+    }
+    .ais-analytics .ais-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #fff;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2em;
+    }
+    .quick-actions {
+      position: fixed; bottom: 200px; right: 24px; z-index: 50;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .quick-action-btn {
+      background: #38bdf8;
+      color: #fff;
+      border-radius: 50%;
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 2px 12px 0 rgba(59,130,246,0.18);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .quick-action-btn:hover {
+      background: #0ea5e9;
+      transform: scale(1.08);
+    }
+    .theme-preset-btn {
+      background: #fff;
+      color: #0f172a;
+      border-radius: 1rem;
+      padding: 0.5rem 1.2rem;
+      font-weight: bold;
+      margin: 0 0.5rem 0.5rem 0;
+      border: 2px solid #38bdf8;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .theme-preset-btn.active, .theme-preset-btn:hover {
+      background: #38bdf8;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="theme-dark min-h-screen flex flex-col">
+  <div class="ais-watermark select-none">AIS</div>
+  <!-- Sticky Header -->
+  <header class="fixed top-0 left-0 w-full z-50 glass shadow-lg">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-3">
+        <img src="images/avatar.png" alt="AIS | Icyitegetse Aimable" class="w-10 h-10 rounded-full border-2 border-blue-400">
+        <span class="font-bold text-lg tracking-wide neon">AIS</span>
+      </div>
+      <ul class="hidden md:flex gap-8 font-semibold text-sm">
+        <li><a href="#home" class="hover:text-blue-400 transition">Home</a></li>
+        <li><a href="#projects" class="hover:text-blue-400 transition">Projects</a></li>
+        <li><a href="#about" class="hover:text-blue-400 transition">About</a></li>
+        <li><a href="#contact" class="hover:text-blue-400 transition">Contact</a></li>
+      </ul>
+      <div class="flex items-center gap-2">
+        <button id="theme-toggle" class="rounded-full p-2 bg-blue-500/10 hover:bg-blue-500/20 transition" title="Toggle theme">🌙</button>
+        <button id="theme-presets" class="rounded-full p-2 bg-blue-500/10 hover:bg-blue-500/20 transition md:ml-2" title="Theme Presets">🎨</button>
+        <button id="chatbot-btn" class="rounded-full p-2 bg-blue-500/10 hover:bg-blue-500/20 transition md:ml-2" title="AI Chatbot"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/><circle cx="12" cy="10" r="6"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 16v4"/></svg></button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative flex flex-col justify-center items-center min-h-[90vh] pt-32 pb-12 px-4 text-center overflow-hidden">
+    <div id="three-bg" class="absolute inset-0 -z-10"></div>
+    <img src="images/avatar.png" alt="AIS | Icyitegetse Aimable" class="w-32 h-32 rounded-full border-4 border-blue-400/40 mx-auto mb-6 animate-bounce shadow-xl">
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 neon">AIS | Icyitegetse Aimable</h1>
+    <p class="text-xl md:text-2xl mb-6 font-medium text-blue-300">UX/UI Designer & Full Stack Developer</p>
+    <div class="flex flex-wrap justify-center gap-3 mb-8">
+      <span class="px-4 py-2 glass rounded-full text-xs font-semibold">React</span>
+      <span class="px-4 py-2 glass rounded-full text-xs font-semibold">Node.js</span>
+      <span class="px-4 py-2 glass rounded-full text-xs font-semibold">Python</span>
+      <span class="px-4 py-2 glass rounded-full text-xs font-semibold">AI/ML</span>
+      <span class="px-4 py-2 glass rounded-full text-xs font-semibold">Tailwind</span>
+    </div>
+    <a href="#projects" class="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-lg font-bold shadow-lg transition-all animate-pulse">See My Projects</a>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-blue-400">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="max-w-7xl mx-auto w-full py-20 px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 neon">AIS Projects</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <a href="projects/currency_converter.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 text-3xl">💱</div>
+        <h3 class="font-bold text-lg mb-2 text-blue-400 group-hover:underline">AIS Currency Converter</h3>
+        <p class="text-sm text-gray-400 mb-4">Real-time currency conversion with a modern UI.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-xs font-semibold transition">Try Now</span>
+      </a>
+      <a href="projects/3d-dashboard.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mb-4 text-3xl">📊</div>
+        <h3 class="font-bold text-lg mb-2 text-indigo-400 group-hover:underline">AIS 3D Dashboard</h3>
+        <p class="text-sm text-gray-400 mb-4">Futuristic dashboard with 3D visualizations.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-xs font-semibold transition">Explore</span>
+      </a>
+      <a href="projects/ai-chat-interface.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mb-4 text-3xl">🤖</div>
+        <h3 class="font-bold text-lg mb-2 text-purple-400 group-hover:underline">AIS Chat Interface</h3>
+        <p class="text-sm text-gray-400 mb-4">Conversational AI with futuristic UI.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-full text-xs font-semibold transition">Chat Now</span>
+      </a>
+      <a href="projects/weather-dashboard.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mb-4 text-3xl">🌤️</div>
+        <h3 class="font-bold text-lg mb-2 text-cyan-400 group-hover:underline">AIS Weather Dashboard</h3>
+        <p class="text-sm text-gray-400 mb-4">Advanced weather interface with 3D effects.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-full text-xs font-semibold transition">Forecast</span>
+      </a>
+      <a href="projects/portfolio-gallery.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-blue-400 rounded-full flex items-center justify-center mb-4 text-3xl">🎨</div>
+        <h3 class="font-bold text-lg mb-2 text-pink-400 group-hover:underline">AIS Portfolio Gallery</h3>
+        <p class="text-sm text-gray-400 mb-4">Interactive gallery of my best work.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-pink-600 hover:bg-pink-700 rounded-full text-xs font-semibold transition">View Gallery</span>
+      </a>
+      <a href="projects/advancedmedia.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center mb-4 text-3xl">🎵</div>
+        <h3 class="font-bold text-lg mb-2 text-green-400 group-hover:underline">AIS Media Player</h3>
+        <p class="text-sm text-gray-400 mb-4">Feature-rich media player with playlists.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-green-600 hover:bg-green-700 rounded-full text-xs font-semibold transition">Play</span>
+      </a>
+      <a href="projects/piano.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mb-4 text-3xl">🎹</div>
+        <h3 class="font-bold text-lg mb-2 text-yellow-400 group-hover:underline">AIS Piano App</h3>
+        <p class="text-sm text-gray-400 mb-4">Virtual piano with realistic sound.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-full text-xs font-semibold transition">Play</span>
+      </a>
+      <a href="projects/editorvip.html" class="project-card glass rounded-2xl p-6 flex flex-col items-center text-center group">
+        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-400 rounded-full flex items-center justify-center mb-4 text-3xl">💻</div>
+        <h3 class="font-bold text-lg mb-2 text-indigo-400 group-hover:underline">AIS VIP Code Editor</h3>
+        <p class="text-sm text-gray-400 mb-4">Advanced code editor with live preview.</p>
+        <span class="mt-auto inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-xs font-semibold transition">Try Editor</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="max-w-4xl mx-auto w-full py-20 px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 neon">About AIS / Icyitegetse Aimable</h2>
+    <div class="glass rounded-2xl p-8 flex flex-col md:flex-row gap-8 items-center">
+      <img src="images/avatar.png" alt="AIS | Icyitegetse Aimable" class="w-32 h-32 rounded-full border-4 border-blue-400/40 shadow-lg mb-6 md:mb-0">
+      <div>
+        <p class="text-lg mb-4">Hi! I’m <span class="font-bold text-blue-400">Icyitegetse Aimable</span> (AIS), a passionate UX/UI Designer and Full Stack Developer. I build futuristic, user-centric web apps and digital experiences using the latest technologies. My expertise spans React, Node.js, Python, AI/ML, and more. I love crafting beautiful, performant, and accessible products for the next generation.</p>
+        <div class="flex flex-wrap gap-3 mb-2">
+          <span class="px-3 py-1 glass rounded-full text-xs font-semibold">Mobile-First</span>
+          <span class="px-3 py-1 glass rounded-full text-xs font-semibold">PWA</span>
+          <span class="px-3 py-1 glass rounded-full text-xs font-semibold">3D/AR</span>
+          <span class="px-3 py-1 glass rounded-full text-xs font-semibold">AI Chatbot</span>
+        </div>
+        <div class="flex gap-4 mt-4">
+          <a href="#contact" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-full font-bold transition">Contact</a>
+          <a href="resume.pdf" class="px-6 py-2 border border-blue-400 rounded-full font-bold hover:bg-blue-400/10 transition" download>Download CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="max-w-4xl mx-auto w-full py-20 px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 neon">Contact AIS</h2>
+    <div class="glass rounded-2xl p-8 flex flex-col md:flex-row gap-8 items-center">
+      <div class="flex-1">
+        <div class="mb-4">
+          <span class="block text-sm text-gray-400 mb-1">Email</span>
+          <a href="mailto:icyitegetseaimable67@gmail.com" class="font-bold text-blue-400 hover:underline">icyitegetseaimable67@gmail.com</a>
+        </div>
+        <div class="mb-4">
+          <span class="block text-sm text-gray-400 mb-1">Mobile / WhatsApp</span>
+          <a href="tel:+250790387213" class="font-bold text-blue-400 hover:underline">+250 790387213</a>
+        </div>
+        <div class="mb-4">
+          <span class="block text-sm text-gray-400 mb-1">Payments</span>
+          <span class="font-bold text-blue-400">MTN Mobile Money, Binance P2P</span>
+        </div>
+        <div class="flex gap-4 mt-4">
+          <a href="https://github.com/icyitegetseaimable" target="_blank" class="hover:text-blue-400 transition">GitHub</a>
+          <a href="#" target="_blank" class="hover:text-blue-400 transition">LinkedIn</a>
+        </div>
+      </div>
+      <form class="flex-1 flex flex-col gap-4">
+        <input type="text" placeholder="Your Name" class="glass rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="email" placeholder="Your Email" class="glass rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <textarea placeholder="Your Message" rows="4" class="glass rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+        <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full font-bold transition">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Floating Action Button (Chatbot) -->
+  <button id="fab-chatbot" class="fixed bottom-8 right-8 w-16 h-16 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center text-3xl shadow-lg floating-btn z-50" title="Open AI Chatbot">
+    🤖
+  </button>
+
+  <!-- AIS Analytics Widget -->
+  <div class="ais-analytics" id="ais-analytics">
+    <div class="ais-title">AIS Analytics</div>
+    <div>Live Visitors: <span id="ais-visitors">0</span></div>
+    <div>Project Views: <span id="ais-views">0</span></div>
+  </div>
+
+  <!-- Quick Actions Floating Menu -->
+  <div class="quick-actions" id="quick-actions">
+    <button class="quick-action-btn" title="Scroll to Top" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+    <button class="quick-action-btn" title="Download CV" onclick="window.location.href='resume.pdf'">📄</button>
+    <button class="quick-action-btn" title="Open Chatbot" onclick="window.location.href='projects/ai-chat-interface.html'">🤖</button>
+    <button class="quick-action-btn" title="Toggle Theme" id="quick-theme-toggle">🌓</button>
+  </div>
+
+  <!-- Theme Presets Modal -->
+  <div id="theme-presets-modal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div class="glass p-8 rounded-2xl flex flex-col items-center">
+      <h3 class="font-bold text-lg mb-4 text-blue-400">Choose Theme Preset</h3>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="theme-preset-btn" data-theme="theme-dark">Dark</button>
+        <button class="theme-preset-btn" data-theme="theme-light">Light</button>
+        <button class="theme-preset-btn" data-theme="theme-cyber">Cyber</button>
+        <button class="theme-preset-btn" data-theme="theme-rose">Rose</button>
+      </div>
+      <button onclick="document.getElementById('theme-presets-modal').style.display='none'" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-full font-bold transition">Close</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto py-8 text-center text-gray-500 text-sm">
+    &copy; 2025 AIS | Icyitegetse Aimable. Crafted with futuristic vision.
+  </footer>
+
+  <!-- 3D/GSAP Animations & Theme/Analytics/Presets JS -->
+  <script>
+    // 3D Hero BG
+    function initThreeBG() {
+      const container = document.getElementById('three-bg');
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+      const geometries = [
+        new THREE.TetrahedronGeometry(1),
+        new THREE.OctahedronGeometry(1),
+        new THREE.IcosahedronGeometry(1)
+      ];
+      const materials = [
+        new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true }),
+        new THREE.MeshBasicMaterial({ color: 0x8b5cf6, wireframe: true }),
+        new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true })
+      ];
+      const meshes = [];
+      for (let i = 0; i < 12; i++) {
+        const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+        const material = materials[Math.floor(Math.random() * materials.length)];
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 10);
+        scene.add(mesh);
+        meshes.push(mesh);
+      }
+      camera.position.z = 8;
+      function animate() {
+        requestAnimationFrame(animate);
+        meshes.forEach((mesh, i) => {
+          mesh.rotation.x += 0.01 + i * 0.0005;
+          mesh.rotation.y += 0.01 + i * 0.0005;
+        });
+        renderer.render(scene, camera);
+      }
+      animate();
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+    initThreeBG();
+
+    // GSAP Animations
+    gsap.from('.hero h1, .hero p, .hero a', { y: 60, opacity: 0, stagger: 0.2, duration: 1, ease: 'power3.out' });
+    gsap.from('.project-card', { y: 80, opacity: 0, stagger: 0.1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '#projects', start: 'top 80%' } });
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('theme-dark');
+      document.body.classList.toggle('theme-light');
+      themeToggle.textContent = document.body.classList.contains('theme-dark') ? '🌙' : '☀️';
+    });
+    // Quick Action Theme Toggle
+    document.getElementById('quick-theme-toggle').onclick = () => {
+      document.body.classList.toggle('theme-dark');
+      document.body.classList.toggle('theme-light');
+    };
+    // Theme Presets
+    document.getElementById('theme-presets').onclick = () => {
+      document.getElementById('theme-presets-modal').style.display = 'flex';
+    };
+    document.querySelectorAll('.theme-preset-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.body.classList.remove('theme-dark','theme-light','theme-cyber','theme-rose');
+        document.body.classList.add(btn.dataset.theme);
+        document.querySelectorAll('.theme-preset-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+      };
+    });
+    // Floating Action Button (Chatbot)
+    document.getElementById('fab-chatbot').onclick = () => {
+      window.location.href = 'projects/ai-chat-interface.html';
+    };
+    document.getElementById('chatbot-btn').onclick = () => {
+      window.location.href = 'projects/ai-chat-interface.html';
+    };
+    // AIS Analytics (Simulated)
+    function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+    function updateAnalytics(){
+      document.getElementById('ais-visitors').textContent = randomInt(7,42);
+      document.getElementById('ais-views').textContent = randomInt(100,999);
+    }
+    setInterval(updateAnalytics, 2500); updateAnalytics();
+    // PWA Install Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Optionally show a custom install button
+      // document.getElementById('pwa-install').style.display = 'block';
+    });
+    // Optionally, you can add a custom install button and call:
+    // deferredPrompt.prompt();
+  </script>
+</body>
+</html>

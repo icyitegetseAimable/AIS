@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard 2050 - Icyitegetse Aimable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .neon-glow {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+        .weather-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(transparent, #60a5fa);
+            animation: rain 0.5s linear infinite;
+        }
+        @keyframes rain {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+        .snow {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: snow 3s linear infinite;
+        }
+        @keyframes snow {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-black text-white h-screen overflow-hidden">
+    <!-- Weather Effects -->
+    <div id="weather-effects" class="fixed inset-0 pointer-events-none z-10"></div>
+    
+    <!-- 3D Background -->
+    <div id="three-container" class="fixed inset-0 z-0"></div>
+    
+    <!-- Main Interface -->
+    <div class="relative z-20 h-screen flex flex-col">
+        <!-- Header -->
+        <header class="glass-effect p-4 border-b border-white/10">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl">🌤️</div>
+                    <div>
+                        <h1 class="text-2xl font-bold neon-glow text-blue-400">Weather Dashboard 2050</h1>
+                        <p class="text-sm text-gray-400">Advanced Meteorological Interface</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="text-sm text-gray-400">Last Updated</div>
+                        <div id="last-updated" class="text-sm">Just now</div>
+                    </div>
+                    <a href="../index.html" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full transition-colors">
+                        ← Back
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex">
+            <!-- Current Weather -->
+            <div class="w-1/3 p-6">
+                <div class="glass-effect rounded-2xl p-8 h-full">
+                    <div class="text-center mb-8">
+                        <div id="current-icon" class="text-8xl mb-4 weather-icon">☀️</div>
+                        <h2 id="current-temp" class="text-6xl font-bold text-blue-400 mb-2">24°C</h2>
+                        <p id="current-desc" class="text-xl text-gray-300 mb-4">Sunny</p>
+                        <p id="current-location" class="text-lg text-blue-400">Kigali, Rwanda</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center p-4 glass-effect rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">💨</span>
+                                <span>Wind</span>
+                            </div>
+                            <span id="wind-speed" class="text-blue-400 font-semibold">12 km/h</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-4 glass-effect rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">💧</span>
+                                <span>Humidity</span>
+                            </div>
+                            <span id="humidity" class="text-blue-400 font-semibold">65%</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-4 glass-effect rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">👁️</span>
+                                <span>Visibility</span>
+                            </div>
+                            <span id="visibility" class="text-blue-400 font-semibold">10 km</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-4 glass-effect rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">🌡️</span>
+                                <span>Feels Like</span>
+                            </div>
+                            <span id="feels-like" class="text-blue-400 font-semibold">26°C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Forecast -->
+            <div class="flex-1 p-6">
+                <div class="glass-effect rounded-2xl p-8 h-full">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-400">7-Day Forecast</h3>
+                    
+                    <div id="forecast" class="grid grid-cols-7 gap-4">
+                        <!-- Forecast items will be generated here -->
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="text-lg font-bold mb-4 text-green-400">Hourly Forecast</h4>
+                        <div id="hourly-forecast" class="flex space-x-4 overflow-x-auto pb-4">
+                            <!-- Hourly items will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weather Map & Alerts -->
+            <div class="w-1/3 p-6">
+                <div class="space-y-6 h-full">
+                    <!-- Weather Map -->
+                    <div class="glass-effect rounded-2xl p-6 flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-yellow-400">Weather Map</h3>
+                        <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-4xl mb-2">🗺️</div>
+                                <div class="text-sm">Interactive Weather Map</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Weather Alerts -->
+                    <div class="glass-effect rounded-2xl p-6 flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-red-400">Weather Alerts</h3>
+                        <div id="alerts" class="space-y-3">
+                            <div class="p-3 bg-red-600/20 border border-red-400/30 rounded-lg">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <span class="text-red-400">⚠️</span>
+                                    <span class="font-semibold text-red-400">UV Index High</span>
+                                </div>
+                                <p class="text-sm text-gray-300">UV index is very high. Take precautions when outdoors.</p>
+                            </div>
+                            
+                            <div class="p-3 bg-yellow-600/20 border border-yellow-400/30 rounded-lg">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <span class="text-yellow-400">🌤️</span>
+                                    <span class="font-semibold text-yellow-400">Partly Cloudy</span>
+                                </div>
+                                <p class="text-sm text-gray-300">Clouds expected in the afternoon.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Weather data simulation
+        const weatherData = {
+            current: {
+                temp: 24,
+                feels_like: 26,
+                description: 'Sunny',
+                icon: '☀️',
+                wind_speed: 12,
+                humidity: 65,
+                visibility: 10,
+                location: 'Kigali, Rwanda'
+            },
+            forecast: [
+                { day: 'Today', temp: 24, icon: '☀️', desc: 'Sunny' },
+                { day: 'Tomorrow', temp: 22, icon: '⛅', desc: 'Partly Cloudy' },
+                { day: 'Wed', temp: 20, icon: '🌧️', desc: 'Light Rain' },
+                { day: 'Thu', temp: 23, icon: '⛅', desc: 'Partly Cloudy' },
+                { day: 'Fri', temp: 25, icon: '☀️', desc: 'Sunny' },
+                { day: 'Sat', temp: 21, icon: '🌦️', desc: 'Scattered Showers' },
+                { day: 'Sun', temp: 24, icon: '☀️', desc: 'Sunny' }
+            ],
+            hourly: [
+                { time: 'Now', temp: 24, icon: '☀️' },
+                { time: '1PM', temp: 26, icon: '☀️' },
+                { time: '2PM', temp: 27, icon: '☀️' },
+                { time: '3PM', temp: 26, icon: '⛅' },
+                { time: '4PM', temp: 25, icon: '⛅' },
+                { time: '5PM', temp: 23, icon: '⛅' },
+                { time: '6PM', temp: 22, icon: '🌅' },
+                { time: '7PM', temp: 20, icon: '🌙' }
+            ]
+        };
+        
+        // Three.js Background
+        function initThreeJS() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0.1);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+            
+            // Create floating clouds
+            const clouds = [];
+            for (let i = 0; i < 20; i++) {
+                const geometry = new THREE.SphereGeometry(Math.random() * 0.5 + 0.2, 8, 8);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const cloud = new THREE.Mesh(geometry, material);
+                
+                cloud.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 10 + 5,
+                    (Math.random() - 0.5) * 20
+                );
+                
+                scene.add(cloud);
+                clouds.push(cloud);
+            }
+            
+            camera.position.z = 15;
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                const time = Date.now() * 0.001;
+                clouds.forEach((cloud, index) => {
+                    cloud.position.x += Math.sin(time + index) * 0.01;
+                    cloud.position.y += Math.cos(time + index * 0.5) * 0.005;
+                    cloud.material.opacity = 0.2 + Math.sin(time + index) * 0.1;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Weather effects
+        function createWeatherEffects(weatherType) {
+            const effectsContainer = document.getElementById('weather-effects');
+            effectsContainer.innerHTML = '';
+            
+            if (weatherType === 'rain') {
+                for (let i = 0; i < 50; i++) {
+                    const drop = document.createElement('div');
+                    drop.className = 'rain';
+                    drop.style.left = Math.random() * 100 + '%';
+                    drop.style.animationDelay = Math.random() * 2 + 's';
+                    effectsContainer.appendChild(drop);
+                }
+            } else if (weatherType === 'snow') {
+                for (let i = 0; i < 30; i++) {
+                    const flake = document.createElement('div');
+                    flake.className = 'snow';
+                    flake.style.left = Math.random() * 100 + '%';
+                    flake.style.animationDelay = Math.random() * 3 + 's';
+                    effectsContainer.appendChild(flake);
+                }
+            }
+        }
+        
+        // Update weather display
+        function updateWeather() {
+            // Update current weather
+            document.getElementById('current-temp').textContent = weatherData.current.temp + '°C';
+            document.getElementById('current-desc').textContent = weatherData.current.description;
+            document.getElementById('current-icon').textContent = weatherData.current.icon;
+            document.getElementById('current-location').textContent = weatherData.current.location;
+            document.getElementById('wind-speed').textContent = weatherData.current.wind_speed + ' km/h';
+            document.getElementById('humidity').textContent = weatherData.current.humidity + '%';
+            document.getElementById('visibility').textContent = weatherData.current.visibility + ' km';
+            document.getElementById('feels-like').textContent = weatherData.current.feels_like + '°C';
+            
+            // Update forecast
+            const forecastContainer = document.getElementById('forecast');
+            forecastContainer.innerHTML = '';
+            
+            weatherData.forecast.forEach(day => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'text-center p-4 glass-effect rounded-xl';
+                dayDiv.innerHTML = `
+                    <div class="text-sm text-gray-400 mb-2">${day.day}</div>
+                    <div class="text-3xl mb-2">${day.icon}</div>
+                    <div class="font-semibold text-blue-400">${day.temp}°C</div>
+                    <div class="text-xs text-gray-400">${day.desc}</div>
+                `;
+                forecastContainer.appendChild(dayDiv);
+            });
+            
+            // Update hourly forecast
+            const hourlyContainer = document.getElementById('hourly-forecast');
+            hourlyContainer.innerHTML = '';
+            
+            weatherData.hourly.forEach(hour => {
+                const hourDiv = document.createElement('div');
+                hourDiv.className = 'text-center p-3 glass-effect rounded-lg min-w-[80px]';
+                hourDiv.innerHTML = `
+                    <div class="text-sm text-gray-400 mb-1">${hour.time}</div>
+                    <div class="text-2xl mb-1">${hour.icon}</div>
+                    <div class="font-semibold text-blue-400">${hour.temp}°C</div>
+                `;
+                hourlyContainer.appendChild(hourDiv);
+            });
+            
+            // Update last updated time
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+            
+            // Create weather effects based on current weather
+            if (weatherData.current.description.toLowerCase().includes('rain')) {
+                createWeatherEffects('rain');
+            } else if (weatherData.current.description.toLowerCase().includes('snow')) {
+                createWeatherEffects('snow');
+            }
+        }
+        
+        // Simulate weather changes
+        function simulateWeatherChanges() {
+            setInterval(() => {
+                // Randomly change weather conditions
+                const conditions = ['Sunny', 'Partly Cloudy', 'Light Rain', 'Cloudy'];
+                const icons = ['☀️', '⛅', '🌧️', '☁️'];
+                const randomIndex = Math.floor(Math.random() * conditions.length);
+                
+                weatherData.current.description = conditions[randomIndex];
+                weatherData.current.icon = icons[randomIndex];
+                weatherData.current.temp = Math.floor(Math.random() * 10) + 20;
+                weatherData.current.feels_like = weatherData.current.temp + Math.floor(Math.random() * 4) - 2;
+                
+                updateWeather();
+            }, 30000); // Update every 30 seconds
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            updateWeather();
+            simulateWeatherChanges();
+            
+            // Update time every minute
+            setInterval(() => {
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+            }, 60000);
+        });
+    </script>
+</body>
+</html> 

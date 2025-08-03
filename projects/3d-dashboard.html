@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Interactive Dashboard - Icyitegetse Aimable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .neon-glow {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+        .hologram {
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            background-size: 200% 200%;
+            animation: hologram 3s ease-in-out infinite;
+        }
+        @keyframes hologram {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-hidden">
+    <!-- 3D Canvas -->
+    <div id="three-container" class="fixed inset-0 z-0"></div>
+    
+    <!-- UI Overlay -->
+    <div class="relative z-10 h-screen flex flex-col">
+        <!-- Header -->
+        <header class="glass-effect p-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold neon-glow text-blue-400">3D Dashboard 2050</h1>
+                <div class="flex space-x-4">
+                    <button id="view-toggle" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full transition-colors">
+                        Toggle View
+                    </button>
+                    <a href="../index.html" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full transition-colors">
+                        ← Back
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex">
+            <!-- Sidebar -->
+            <aside class="w-80 glass-effect p-6">
+                <h2 class="text-xl font-bold mb-6 text-purple-400">Navigation</h2>
+                <nav class="space-y-4">
+                    <button class="w-full text-left p-3 rounded-lg hover:bg-white/10 transition-colors" data-section="analytics">
+                        📊 Analytics
+                    </button>
+                    <button class="w-full text-left p-3 rounded-lg hover:bg-white/10 transition-colors" data-section="users">
+                        👥 Users
+                    </button>
+                    <button class="w-full text-left p-3 rounded-lg hover:bg-white/10 transition-colors" data-section="performance">
+                        ⚡ Performance
+                    </button>
+                    <button class="w-full text-left p-3 rounded-lg hover:bg-white/10 transition-colors" data-section="ai">
+                        🤖 AI Insights
+                    </button>
+                </nav>
+                
+                <div class="mt-8 p-4 glass-effect rounded-lg">
+                    <h3 class="font-semibold mb-2">Real-time Stats</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Active Users</span>
+                            <span class="text-green-400" id="active-users">1,247</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>System Load</span>
+                            <span class="text-blue-400" id="system-load">67%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>AI Processing</span>
+                            <span class="text-purple-400" id="ai-processing">89%</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Main Dashboard -->
+            <main class="flex-1 p-6">
+                <div class="grid grid-cols-2 gap-6 h-full">
+                    <!-- Analytics Panel -->
+                    <div class="glass-effect rounded-xl p-6">
+                        <h3 class="text-lg font-bold mb-4 text-blue-400">Analytics Overview</h3>
+                        <div class="space-y-4">
+                            <div class="h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold">2.4M</div>
+                                    <div class="text-sm">Total Interactions</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center p-4 glass-effect rounded-lg">
+                                    <div class="text-2xl font-bold text-green-400">+23%</div>
+                                    <div class="text-sm">Growth</div>
+                                </div>
+                                <div class="text-center p-4 glass-effect rounded-lg">
+                                    <div class="text-2xl font-bold text-purple-400">98.7%</div>
+                                    <div class="text-sm">Uptime</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 3D Visualization -->
+                    <div class="glass-effect rounded-xl p-6">
+                        <h3 class="text-lg font-bold mb-4 text-green-400">3D Data Visualization</h3>
+                        <div id="chart-container" class="h-64 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-4xl mb-2">📈</div>
+                                <div class="text-sm">Interactive 3D Charts</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Insights -->
+                    <div class="glass-effect rounded-xl p-6">
+                        <h3 class="text-lg font-bold mb-4 text-purple-400">AI Insights</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 glass-effect rounded-lg">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                                    <span class="font-semibold">Trend Analysis</span>
+                                </div>
+                                <p class="text-sm text-gray-300">User engagement increased by 15% this week</p>
+                            </div>
+                            <div class="p-4 glass-effect rounded-lg">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                                    <span class="font-semibold">Predictions</span>
+                                </div>
+                                <p class="text-sm text-gray-300">Expected 10% growth in next quarter</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="glass-effect rounded-xl p-6">
+                        <h3 class="text-lg font-bold mb-4 text-yellow-400">Performance Metrics</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm">CPU Usage</span>
+                                    <span class="text-sm text-blue-400">67%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-blue-400 h-2 rounded-full" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm">Memory</span>
+                                    <span class="text-sm text-green-400">45%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm">Network</span>
+                                    <span class="text-sm text-purple-400">89%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-purple-400 h-2 rounded-full" style="width: 89%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        // Three.js Scene
+        let scene, camera, renderer, controls;
+        let cubes = [];
+        let spheres = [];
+        
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0.1);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+            
+            // Create floating geometric shapes
+            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            
+            for (let i = 0; i < 20; i++) {
+                const cubeMaterial = new THREE.MeshBasicMaterial({ 
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5),
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                
+                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20
+                );
+                cube.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                scene.add(cube);
+                cubes.push(cube);
+                
+                const sphereMaterial = new THREE.MeshBasicMaterial({ 
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5),
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.4
+                });
+                
+                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphere.position.set(
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 15
+                );
+                scene.add(sphere);
+                spheres.push(sphere);
+            }
+            
+            camera.position.z = 15;
+            
+            animate();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            cubes.forEach((cube, index) => {
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                cube.position.y += Math.sin(time + index) * 0.01;
+                cube.material.opacity = 0.3 + Math.sin(time + index) * 0.3;
+            });
+            
+            spheres.forEach((sphere, index) => {
+                sphere.rotation.x += 0.005;
+                sphere.rotation.y += 0.005;
+                sphere.position.x += Math.cos(time + index) * 0.005;
+                sphere.material.opacity = 0.2 + Math.sin(time + index * 0.5) * 0.2;
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        // UI Interactions
+        document.querySelectorAll('[data-section]').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('[data-section]').forEach(btn => {
+                    btn.classList.remove('bg-blue-600');
+                });
+                // Add active class to clicked button
+                button.classList.add('bg-blue-600');
+                
+                // Update stats randomly
+                updateStats();
+            });
+        });
+        
+        function updateStats() {
+            const activeUsers = Math.floor(Math.random() * 2000) + 1000;
+            const systemLoad = Math.floor(Math.random() * 30) + 50;
+            const aiProcessing = Math.floor(Math.random() * 20) + 80;
+            
+            document.getElementById('active-users').textContent = activeUsers.toLocaleString();
+            document.getElementById('system-load').textContent = systemLoad + '%';
+            document.getElementById('ai-processing').textContent = aiProcessing + '%';
+        }
+        
+        // View toggle
+        document.getElementById('view-toggle').addEventListener('click', () => {
+            const main = document.querySelector('main');
+            main.classList.toggle('hidden');
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            
+            // Update stats every 5 seconds
+            setInterval(updateStats, 5000);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        });
+    </script>
+</body>
+</html> 

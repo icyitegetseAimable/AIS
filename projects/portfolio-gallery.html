@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Gallery 2050 - Icyitegetse Aimable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .neon-glow {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+        .project-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .project-card:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .flip-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #60a5fa;
+            border-radius: 50%;
+            animation: particle-float 8s infinite linear;
+        }
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen overflow-x-hidden">
+    <!-- Particle Background -->
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+    
+    <!-- 3D Background -->
+    <div id="three-container" class="fixed inset-0 z-0"></div>
+    
+    <!-- Main Interface -->
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="glass-effect p-6 border-b border-white/10">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <div class="text-3xl">🎨</div>
+                        <div>
+                            <h1 class="text-3xl font-bold neon-glow text-blue-400">Portfolio Gallery 2050</h1>
+                            <p class="text-gray-400">Interactive Project Showcase</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex space-x-2">
+                            <button id="filter-all" class="px-4 py-2 bg-blue-600 rounded-full text-sm">All</button>
+                            <button id="filter-web" class="px-4 py-2 bg-gray-600 rounded-full text-sm">Web</button>
+                            <button id="filter-ai" class="px-4 py-2 bg-gray-600 rounded-full text-sm">AI</button>
+                            <button id="filter-mobile" class="px-4 py-2 bg-gray-600 rounded-full text-sm">Mobile</button>
+                        </div>
+                        <a href="../index.html" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full transition-colors">
+                            ← Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Projects Grid -->
+        <main class="max-w-7xl mx-auto p-6">
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1: Currency Converter -->
+                <div class="project-card flip-card" data-category="web">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">💱</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-blue-400">Global Currency Converter</h3>
+                        <p class="text-gray-400 text-sm mb-4">Real-time currency conversion with modern UI and API integration</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">React</span>
+                            <span class="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded">API</span>
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">Tailwind</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create a fast, intuitive currency conversion tool</p>
+                            <p><strong>Solution:</strong> Built responsive web app with real-time API integration</p>
+                            <p><strong>Technologies:</strong> React, ExchangeRate-API, Tailwind CSS</p>
+                            <p><strong>Features:</strong> Live rates, multiple currencies, local storage</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="currency_converter.html" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2: AI Chatbot -->
+                <div class="project-card flip-card" data-category="ai">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">🤖</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-purple-400">AIS Nova AI Chatbot</h3>
+                        <p class="text-gray-400 text-sm mb-4">Advanced AI-powered conversational interface with NLP</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded">AI/ML</span>
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">Python</span>
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">NLP</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-purple-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create intelligent conversational AI</p>
+                            <p><strong>Solution:</strong> Developed advanced chatbot with natural language processing</p>
+                            <p><strong>Technologies:</strong> Python, Hugging Face, React</p>
+                            <p><strong>Features:</strong> Context awareness, code generation, problem solving</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="ai-chat-interface.html" class="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3: Media Player -->
+                <div class="project-card flip-card" data-category="web">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">🎵</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-green-400">Advanced Media Player</h3>
+                        <p class="text-gray-400 text-sm mb-4">Feature-rich media player with playlist management</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">JavaScript</span>
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">HTML5</span>
+                            <span class="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded">CSS3</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-green-600 hover:bg-green-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-green-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create versatile media player</p>
+                            <p><strong>Solution:</strong> Built cross-device player with modern UI</p>
+                            <p><strong>Technologies:</strong> JavaScript, HTML5 Audio/Video, CSS3</p>
+                            <p><strong>Features:</strong> Playlist support, video controls, responsive design</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="advancedmedia.html" class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4: Piano App -->
+                <div class="project-card flip-card" data-category="web">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">🎹</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Interactive Piano</h3>
+                        <p class="text-gray-400 text-sm mb-4">Virtual piano with realistic sound and responsive design</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-yellow-600/20 text-yellow-400 text-xs rounded">JavaScript</span>
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">Web Audio</span>
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">CSS3</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-yellow-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create engaging music app</p>
+                            <p><strong>Solution:</strong> Developed interactive piano with realistic sounds</p>
+                            <p><strong>Technologies:</strong> JavaScript, Web Audio API, CSS3</p>
+                            <p><strong>Features:</strong> Multiple octaves, responsive keys, visual feedback</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="piano.html" class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5: 3D Dashboard -->
+                <div class="project-card flip-card" data-category="web">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">📊</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-indigo-400">3D Interactive Dashboard</h3>
+                        <p class="text-gray-400 text-sm mb-4">Futuristic dashboard with 3D visualizations</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-indigo-600/20 text-indigo-400 text-xs rounded">Three.js</span>
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">JavaScript</span>
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">WebGL</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-indigo-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create immersive 3D interface</p>
+                            <p><strong>Solution:</strong> Built interactive 3D dashboard</p>
+                            <p><strong>Technologies:</strong> Three.js, WebGL, JavaScript</p>
+                            <p><strong>Features:</strong> 3D charts, real-time data, responsive design</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="3d-dashboard.html" class="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6: Weather Dashboard -->
+                <div class="project-card flip-card" data-category="web">
+                    <div class="card-front glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <div class="flex-1 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                            <div class="text-6xl">🌤️</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-cyan-400">Weather Dashboard 2050</h3>
+                        <p class="text-gray-400 text-sm mb-4">Advanced weather interface with 3D effects</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-cyan-600/20 text-cyan-400 text-xs rounded">Three.js</span>
+                            <span class="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">Weather API</span>
+                            <span class="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">CSS3</span>
+                        </div>
+                        <button class="mt-auto px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-full text-sm transition-colors flip-trigger">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-back glass-effect rounded-2xl p-6 h-80 flex flex-col">
+                        <h3 class="text-xl font-bold mb-4 text-cyan-400">Project Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <p><strong>Challenge:</strong> Create immersive weather experience</p>
+                            <p><strong>Solution:</strong> Built futuristic weather dashboard</p>
+                            <p><strong>Technologies:</strong> Three.js, Weather APIs, CSS3</p>
+                            <p><strong>Features:</strong> 3D effects, real-time data, weather animations</p>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <a href="weather-dashboard.html" class="flex-1 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-full text-sm transition-colors text-center">
+                                Live Demo
+                            </a>
+                            <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm transition-colors flip-trigger">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Three.js Background
+        function initThreeJS() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0.1);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+            
+            // Create floating geometric shapes
+            const geometries = [
+                new THREE.TetrahedronGeometry(1),
+                new THREE.OctahedronGeometry(1),
+                new THREE.IcosahedronGeometry(1)
+            ];
+            
+            const materials = [
+                new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0x8b5cf6, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true })
+            ];
+            
+            const meshes = [];
+            for (let i = 0; i < 20; i++) {
+                const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+                const material = materials[Math.floor(Math.random() * materials.length)];
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                mesh.position.set(
+                    (Math.random() - 0.5) * 30,
+                    (Math.random() - 0.5) * 30,
+                    (Math.random() - 0.5) * 30
+                );
+                
+                scene.add(mesh);
+                meshes.push(mesh);
+            }
+            
+            camera.position.z = 20;
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                const time = Date.now() * 0.001;
+                meshes.forEach((mesh, index) => {
+                    mesh.rotation.x += 0.01;
+                    mesh.rotation.y += 0.01;
+                    mesh.position.y += Math.sin(time + index) * 0.01;
+                    mesh.material.opacity = 0.3 + Math.sin(time + index) * 0.3;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Particle system
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Card flip functionality
+        function initCardFlips() {
+            document.querySelectorAll('.flip-trigger').forEach(button => {
+                button.addEventListener('click', () => {
+                    const card = button.closest('.flip-card');
+                    card.classList.toggle('flipped');
+                });
+            });
+        }
+        
+        // Filter functionality
+        function initFilters() {
+            const filterButtons = document.querySelectorAll('[id^="filter-"]');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => {
+                        btn.className = 'px-4 py-2 bg-gray-600 rounded-full text-sm';
+                    });
+                    button.className = 'px-4 py-2 bg-blue-600 rounded-full text-sm';
+                    
+                    // Filter projects
+                    const filter = button.id.replace('filter-', '');
+                    projectCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                            gsap.fromTo(card, 
+                                { opacity: 0, y: 50 }, 
+                                { opacity: 1, y: 0, duration: 0.5 }
+                            );
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            createParticles();
+            initCardFlips();
+            initFilters();
+            
+            // Animate cards on load
+            gsap.fromTo('.project-card', 
+                { opacity: 0, y: 100 }, 
+                { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }
+            );
+        });
+    </script>
+</body>
+</html> 
